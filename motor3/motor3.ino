@@ -8,13 +8,15 @@ AF_DCMotor motor3(3);
 AF_DCMotor motor4(4);
 
 // задаем разъемы для сонара и определяем переменные
-int Trig = 18;
+int Trig = 18; // аналоговые выходы могут работать как цифровые. см. http://zelectro.com.ua/Adafruit_motor_shield
 int Echo = 19; 
 unsigned int time_us=0; // Переменная для хранения временного интервала
 unsigned int distance_sm=0; // Переменная для хранения расстояния в сантиметрах
 
 int i;
 
+
+// Я хз зачем оно нужно...
 void setup() {
   // Активируем работу с сонаром
   pinMode(Trig, OUTPUT);
@@ -80,16 +82,10 @@ void loop()
     //stop(); // стоять, бояться!
   }
   
-  /*
-  gogogo(BACKWARD, 25); // назад
-  delay(5000); // ехать 5 секунд
-  stop(); // стоять, бояться!
-  */
-  
   if (distance_sm <= 20) // разворачиваемся, пока не появится куда ехать
   {
     stop(); // стоять, бояться!
-   /* // Разворачиваемся
+    /*
     motor1.run(FORWARD);
     motor2.run(BACKWARD);
     for (i=0; i<25; i++) {
@@ -103,9 +99,8 @@ void loop()
       motor3.setSpeed(i*10+5); 
       motor4.setSpeed(i*10+5); 
       delay(5);
-    }*/
     // строки ниже закомментил, т.к. разворачиваемся не по времени, а пока не появится место для движения
     //delay(5000); // ехать 5 секунд
-    //stop();
+    //stop(); */
   }
 }
