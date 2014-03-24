@@ -8,32 +8,35 @@ AF_DCMotor motor3(3);
 AF_DCMotor motor4(4);
 
 int vSpeed = 255;
+int i;
 
 void setup() {
   // Задаем максимальную скорость вращения моторов (аналог работы PWM) 
-  motor1.setSpeed(10);
+  motor1.setSpeed(vSpeed);
   motor1.run(RELEASE);
-  motor2.setSpeed(10);
+  motor2.setSpeed(vSpeed);
   motor2.run(RELEASE);
-  motor3.setSpeed(10);
+  motor3.setSpeed(vSpeed);
   motor3.run(RELEASE);
-  motor4.setSpeed(10);
+  motor4.setSpeed(vSpeed);
   motor4.run(RELEASE);
 }
 
-int i;
-
-void forward() {
-  motor1.run(FORWARD); // Задаем движение вперед
-  motor2.run(FORWARD);
-  for (i=0; i<25; i++) {
+// Задаем движение машине. Учитывая, что одновременно 4 двигателя по току не стартуют, используем этот костыль.
+// где:
+//    cmd - направление движения ("FORWARD" - вперед, "BACKWARD" - назад)
+//    vGoSpeed - скорость движения ("0..25")
+void gogogo(uint8_t cmd, uint8_t vGoSpeed) {
+  motor1.run(cmd); // Задаем движение вперед
+  motor2.run(cmd);
+  for (i=0; i<vGoSpeed; i++) {
     motor1.setSpeed(i*10+5); 
     motor2.setSpeed(i*10+5); 
     delay(5);
  }
-  motor3.run(FORWARD);
-  motor4.run(FORWARD);
-  for (i=0; i<25; i++) {
+  motor3.run(cmd);
+  motor4.run(cmd);
+  for (i=0; i<vGoSpeed; i++) {
     motor3.setSpeed(i*10+5); 
     motor4.setSpeed(i*10+5); 
     delay(5);
@@ -50,11 +53,14 @@ void stop() {
 
 void loop() 
 {
-  forward();
+  gogogo(FORWARD, 25);
   delay(5000);
-
   stop();
   
+  gogogo(BACKWARD, 25);
+  delay(5000);
+  stop();
+
   
   /*
   motor1.run(FORWARD); // Задаем движение вперед
