@@ -21,6 +21,23 @@ void setup() {
   motor4.run(RELEASE);
 }
 
+void FORWARD() {
+  motor1.run(FORWARD); // Задаем движение вперед
+  motor2.run(FORWARD);
+  motor3.run(FORWARD);
+  motor4.run(FORWARD);
+  for (i=0; i<255; i++) {
+    motor1.setSpeed(vSpeed); 
+    motor2.setSpeed(vSpeed); 
+    delay(5);
+ }
+  for (i=0; i<255; i++) {
+    motor3.setSpeed(vSpeed); 
+    motor4.setSpeed(vSpeed); 
+    delay(5);
+ }
+}
+
 int i;
 
 void loop() {/*
