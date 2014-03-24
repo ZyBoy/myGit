@@ -21,28 +21,42 @@ void setup() {
   motor4.run(RELEASE);
 }
 
+int i;
+
 void forward() {
   motor1.run(FORWARD); // Задаем движение вперед
   motor2.run(FORWARD);
-  motor3.run(FORWARD);
-  motor4.run(FORWARD);
-  for (i=0; i<255; i++) {
-    motor1.setSpeed(vSpeed); 
-    motor2.setSpeed(vSpeed); 
+  for (i=0; i<25; i++) {
+    motor1.setSpeed(i*10+5); 
+    motor2.setSpeed(i*10+5); 
     delay(5);
  }
-  for (i=0; i<255; i++) {
-    motor3.setSpeed(vSpeed); 
-    motor4.setSpeed(vSpeed); 
+  motor3.run(FORWARD);
+  motor4.run(FORWARD);
+  for (i=0; i<25; i++) {
+    motor3.setSpeed(i*10+5); 
+    motor4.setSpeed(i*10+5); 
     delay(5);
  }
 }
 
-int i;
+void stop() {
+  motor1.run(RELEASE); 
+  motor2.run(RELEASE);
+  motor3.run(RELEASE);
+  motor4.run(RELEASE);
+  delay(500);  
+}
 
 void loop() 
-  forward()
-{/*
+{
+  forward();
+  delay(5000);
+
+  stop();
+  
+  
+  /*
   motor1.run(FORWARD); // Задаем движение вперед
   motor2.run(FORWARD);
   motor3.run(FORWARD);
