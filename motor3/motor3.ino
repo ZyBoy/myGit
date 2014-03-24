@@ -33,16 +33,18 @@ void gogogo(uint8_t cmd, uint8_t vGoSpeed) {
     motor1.setSpeed(i*10+5); 
     motor2.setSpeed(i*10+5); 
     delay(5);
- }
+  }
   motor3.run(cmd);
   motor4.run(cmd);
   for (i=0; i<vGoSpeed; i++) {
     motor3.setSpeed(i*10+5); 
     motor4.setSpeed(i*10+5); 
     delay(5);
- }
+  }
 }
 
+// Останавливаем двигатели. Очень не рекомендуется резко переключать направление вращения двигателей.
+// Лучше дать небольшой промежуток времени.
 void stop() {
   motor1.run(RELEASE); 
   motor2.run(RELEASE);
@@ -53,89 +55,31 @@ void stop() {
 
 void loop() 
 {
-  gogogo(FORWARD, 25);
-  delay(5000);
-  stop();
+  gogogo(FORWARD, 25); // вперед
+  delay(5000); // ехать 5 секунд
+  stop(); // стоять, бояться!
   
-  gogogo(BACKWARD, 25);
-  delay(5000);
-  stop();
+  gogogo(BACKWARD, 25); // назад
+  delay(5000); // ехать 5 секунд
+  stop(); // стоять, бояться!
 
   
-  /*
-  motor1.run(FORWARD); // Задаем движение вперед
-  motor2.run(FORWARD);
-  motor3.run(FORWARD);
-  motor4.run(FORWARD);
-  for (i=0; i<255; i++) {
-    motor1.setSpeed(vSpeed); 
-    motor2.setSpeed(vSpeed); 
-    delay(5);
- }
-  for (i=0; i<255; i++) {
-    motor3.setSpeed(vSpeed); 
-    motor4.setSpeed(vSpeed); 
-    delay(5);
- }
-
-  delay(1000);
-  
-  // Останавливаем двигатели
-  // Очень не рекомендуем резко переключать направление вращения двигателей.
-  // Лучше дать небольшой промежуток времени.
-  
-  motor1.run(RELEASE); 
-  motor2.run(RELEASE);
-  motor3.run(RELEASE);
-  motor4.run(RELEASE);
-  delay(500);
-  
-  // Двигаемся в обратном направлении
-  motor1.run(BACKWARD);  // Задаем движение назад
-  motor2.run(BACKWARD);
-  for (i=0; i<255; i++) {
-    motor1.setSpeed(vSpeed); 
-    motor2.setSpeed(vSpeed); 
-    delay(5);
- }
-  motor3.run(BACKWARD);
-  motor4.run(BACKWARD);
-  for (i=0; i<255; i++) {
-    motor3.setSpeed(vSpeed); 
-    motor4.setSpeed(vSpeed); 
-    delay(5);
- }
-  delay(1000);
-  
-  // Останавливаем двигатели  
-  motor1.run(RELEASE);
-  motor2.run(RELEASE);
-  motor3.run(RELEASE);
-  motor4.run(RELEASE);
-  delay(500);*/
-  
-  // разворачиваемся
-    // Двигаемся в обратном направлении
-  motor1.run(FORWARD);  // Задаем движение назад
+  // Разворачиваемся
+  motor1.run(FORWARD);
   motor2.run(BACKWARD);
   for (i=0; i<25; i++) {
     motor1.setSpeed(i*10+5); 
     motor2.setSpeed(i*10+5); 
     delay(5);
- }
+  }
   motor3.run(BACKWARD);
   motor4.run(FORWARD);
   for (i=0; i<25; i++) {
     motor3.setSpeed(i*10+5); 
     motor4.setSpeed(i*10+5); 
     delay(5);
- }
-  delay(5000);
+  }
   
-  // Останавливаем двигатели  
-  motor1.run(RELEASE);
-  motor2.run(RELEASE);
-  motor3.run(RELEASE);
-  motor4.run(RELEASE);
-  delay(1000);
+  delay(5000); // ехать 5 секунд
+  stop();
 }
