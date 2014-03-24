@@ -21,7 +21,7 @@ void setup() {
   motor4.run(RELEASE);
 }
 
-void FORWARD() {
+void forward() {
   motor1.run(FORWARD); // Задаем движение вперед
   motor2.run(FORWARD);
   motor3.run(FORWARD);
@@ -40,7 +40,9 @@ void FORWARD() {
 
 int i;
 
-void loop() {/*
+void loop() 
+  forward()
+{/*
   motor1.run(FORWARD); // Задаем движение вперед
   motor2.run(FORWARD);
   motor3.run(FORWARD);
