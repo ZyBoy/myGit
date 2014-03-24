@@ -1,0 +1,13 @@
+<mm_project serial_port="COM18" board="Arduino Uno" programmer="" includePaths="" libPaths="" libs="" default="yes" useCodeAutomation="yes" linkPrintfVersion="1" serialPortSpeed="" >
+  <files>
+    <file name="Motor_main.cpp" open="yes" />
+    <file name="motor_main.h" open="no" />
+  </files>
+  <extras>
+  </extras>
+  <externals>
+    <external name="C:\Program Files (x86)\Arduino\libraries\AFMotor\AFMotor.cpp" />
+    <external name="C:\Program Files (x86)\Arduino\libraries\Servo\Servo.cpp" />
+    <external name="C:\Program Files (x86)\Arduino\libraries\NewPing\NewPing.cpp" />
+  </externals>
+</mm_project>
