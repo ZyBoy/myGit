@@ -20,7 +20,6 @@ int i;
 int leftside;
 int rightside;
 
-
 void setup() {
   // Активируем работу с сонаром
   pinMode(Trig, OUTPUT);
