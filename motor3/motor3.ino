@@ -84,7 +84,7 @@ void turn2left() {
       motor4.setSpeed(i*10+5); 
       delay(5);
 	}
-  //  delay(100);
+    delay(100);
 }
 
 void turn2right() {
@@ -102,7 +102,7 @@ void turn2right() {
       motor4.setSpeed(i*10+5); 
       delay(5);
 	}
-  //  delay(100);
+    delay(100);
 }
 
 int sonar() // функция типа int, потому что возвращается значенеи типа int )))
