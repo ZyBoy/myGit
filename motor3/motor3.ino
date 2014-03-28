@@ -21,6 +21,8 @@ int leftside;
 int rightside;
 
 void setup() {
+  TIMSK2=1; // Обязательно для многозадачности!!!
+  
   // Активируем работу с сонаром
   pinMode(Trig, OUTPUT);
   pinMode(Echo, INPUT);
@@ -116,7 +118,7 @@ int sonar() // функция типа int, потому что возвраща
   return vDistance_sm;
 }
 
-void loop() 
+void loop1() 
 {
  if (distance_sm <= 30) // разворачиваемся, пока не появится куда ехать
   {
@@ -125,7 +127,7 @@ void loop()
 	servo1.write(50);  // Посмотрим налево
         delay(500); // пауза легкая
 	leftside = sonar();
-	
+
 	servo1.write(120);  // Посмотрим направо
         delay(500); // пауза легкая
         rightside = sonar();
@@ -151,4 +153,11 @@ void loop()
     //delay(5000); // ехать 5 секунд 
     //stop(); // стоять, бояться!
   }
+}
+
+void loop2() 
+{
+  // тут, в параллельном потоке, будем регулировать скорость
+  
+  // код для работы с источником 
 }
