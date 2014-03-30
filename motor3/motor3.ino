@@ -1,3 +1,6 @@
+#include <MirmPS.h>
+#include <MirmPS_assemf.h>
+
 #include <AFMotor.h>  // Подключаем библиотеку для работы с шилдом https://github.com/adafruit/Adafruit-Motor-Shield-library/zipball/master
 #include <Servo.h>  // Подключаем библиотеку для работы с сервоприводами
 
