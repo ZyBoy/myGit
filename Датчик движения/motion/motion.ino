@@ -34,7 +34,8 @@ void draw(void) {
 }
 
 void setup(void) {
- 
+    u8g.setRot180(); // Перевернем экран на 180 градусов
+    
     pinMode(pirPin, INPUT);
     digitalWrite(pirPin, LOW);
     for(int i = 0; i < calibrationTime; i++)
@@ -69,6 +70,23 @@ void setup(void) {
 
 void loop(void) {
   u8g.firstPage();  
+
+
+/*
+  u8g.drawHLine(2, 35, 47);
+  u8g.drawVLine(45, 32, 12);
+  u8g.drawBox(5,10,20,10);
+  u8g.drawStr( 0, 30, "drawFrame");
+  u8g.drawFrame(5,10+30,20,10);
+  u8g.drawRFrame(5, 10,40,30, 5);
+  u8g.drawRBox(50, 10,25,40, 5);
+  u8g.drawStr90(30,31, " 90");
+  u8g.drawStr180(30,31, " 180");
+  u8g.drawStr270(30,31, " 270");
+  u8g.drawTriangle(57,10, 45,30, 86,53);
+  u8g.drawPixel(10, 10);
+  
+*/  
 
   //Если обнаружено движение
   if(digitalRead(pirPin) == HIGH)
