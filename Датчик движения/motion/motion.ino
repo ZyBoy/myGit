@@ -20,31 +20,25 @@ boolean takeLowTime;
 int pirPin = 2;    //вывод подключения PIR датчика
 // =================================================== 
 
-
-void draw(void) {
-  String stringVar = String(i); // объявим Sring и конвертируем i в нее
-  char charVar[sizeof(stringVar)];  // объявим char* размером как наша переменная Sring
-  stringVar.toCharArray(charVar, sizeof(charVar)); // Преобразуем (неинтуиивная запись) String в char* (я хз какая разница между char и char*, но это критично!!!)
-
-  u8g.setFont(my5x7rus);
-  u8g.setScale2x2();
-//  u8g.drawStr(12,8,"км/ч");
-  u8g.drawStr(1,8,charVar);
-  u8g.undoScale();
-}
-
 void setup(void) {
     u8g.setRot180(); // Перевернем экран на 180 градусов
     
     pinMode(pirPin, INPUT);
     digitalWrite(pirPin, LOW);
-    for(int i = 0; i < calibrationTime; i++)
+    for(int i = 0; i < calibrationTime*2; i++)
     {
       u8g.firstPage();  
       do {
            u8g.setFont(my5x7rus);
-           u8g.drawStr(1,8,"Калибруем:");
+           u8g.drawStr(22, 10, "Калибруем");
+           u8g.drawStr(32, 20, "датчик");
 
+           // Progress bar
+           u8g.drawFrame(20, 30, calibrationTime*2, 4); // u8g.drawFrame(X, Y, +X, +Y);
+           u8g.drawHLine(21, 31, 1+i);
+           u8g.drawHLine(21, 32, 1+i);
+/*
+           u8g.drawStr(1,8,"Калибруем:");
            String stringVar = String(i); // объявим Sring и конвертируем i в нее
            char charVar[sizeof(stringVar)];  // объявим char* размером как наша переменная Sring
            stringVar.toCharArray(charVar, sizeof(charVar)); // Преобразуем (неинтуиивная запись) String в char* (я хз какая разница между char и char*, но это критично!!!)
@@ -54,10 +48,11 @@ void setup(void) {
              u8g.drawStr(69,8,"из 30");
            else
              u8g.drawStr(74,8,"из 30");
+*/
       } 
       while( u8g.nextPage() );
       
-      delay(1000);
+      delay(500);
     }
 
   u8g.firstPage();  
