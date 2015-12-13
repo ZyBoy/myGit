@@ -1,66 +1,120 @@
+#define CLOCK_PIN 0
+#define RESET_PIN 1
+#define BUTTON 2
+#define ZUMMER 4
+
+boolean timer_stopped = true;  // Флаг "таймер остановлен"
+int vTimer = 0; // счетчик таймера
+ 
 /*
- Программа поочередно включается все светодиоды, подключенные к двум
-сдвиговым регистрам 74HC595 .Created 22 May 2009
- Modified 23 Mar 2010
- by Tom Igoe
+ * Функция resetNumber обнуляет текущее значение
+ * на счётчике
  */
-
-//Пин подключен к ST_CP входу 74HC595
-const int latchPin = 0;
-//Пин подключен к SH_CP входу 74HC595
-const int clockPin = 1;
-//Пин подключен к DS входу 74HC595
-const int dataPin = 2;
-
-char inputString[2];
-
-void setup() {
-   //устанавливаем режим OUTPUT
-  pinMode(latchPin, OUTPUT);
-  pinMode(dataPin, OUTPUT);  
-  pinMode(clockPin, OUTPUT);
+void resetNumber()
+{
+    // Для сброса на мгновение ставим контакт
+    // reset в HIGH и возвращаем обратно в LOW
+    digitalWrite(RESET_PIN, HIGH);
+    digitalWrite(RESET_PIN, LOW);
+    vTimer = 0;    // сбросим счетчик
 }
 
-void loop() {
-  // проходим циклом по всем 16 выходам двух регистров
-  for (int thisLed = 0; thisLed < 16; thisLed++) {
-    // записываем сигнал в регистр для очередного светодиода
-    registerWrite(thisLed, HIGH);
-    // если это не первый светодиод, то отключаем предыдущий
-    if (thisLed > 0) {
-      registerWrite(thisLed - 1, LOW);
-    } 
-    // если это первый светодиод, то отключаем последний
-    else {
-      registerWrite(15, LOW);
-    } 
-    // делаем паузу перед следующией итерацией
-    delay(250);
+void numerator()
+{
+    digitalWrite(CLOCK_PIN, HIGH);
+    digitalWrite(CLOCK_PIN, LOW);
+    vTimer = vTimer + 1; // ведем счетчик ;)
+}
+
+/* Функция генерации звука пьезоэлементом. Все достаточно тупо и просто ))))
+ * Входные параметры
+ *   int vDelay    - период в микросекундах, по которому генерится звук.
+ */
+void beep(int vDelay){
+  for (int i=0;i<=1000;i++){ // собственно "колебаем" пьезо 1000 раз
+    digitalWrite(ZUMMER, HIGH);   // подаем на пьезо напряжение
+    delayMicroseconds(vDelay);    // ждем "период"
+    digitalWrite(ZUMMER, LOW);    // снимаем напряжение
+    delayMicroseconds(vDelay);    // и опять ждем
+  }
+}
+
+boolean button_is_down(){
+  if(digitalRead(BUTTON)==HIGH) // Проверяем нажатие кнопки, что бы можно было остановить таймер в любом состоянии
+  {
+    timer_stopped = true;   // переключаем флаг на "останов"
+    beep(20);              // Подтверждающий бип, он же небольшая сглаживающая задержка
+    resetNumber();         // обязательно сбросим таймер
+    return true;            // Возвращаем подтверждение останова
+  }
+    return false;           // не подтверждаем нажатие кнопки
+}
+
+void setup()
+{
+    pinMode(RESET_PIN, OUTPUT);
+    pinMode(CLOCK_PIN, OUTPUT);
+    pinMode(ZUMMER, OUTPUT);   // активируем режим пина для зуммера на "выход"
+    digitalWrite(BUTTON,LOW); // запишем в кнопку "низкий уровень"
+    // Обнуляем счётчик при старте, чтобы он не оказался
+    // в случайном состоянии
+    resetNumber();
+    delayMicroseconds(100);
+}
+ 
+void loop()
+{
+int popravka = 0; // переменная с поправкой, нужна для исправления дефекта в результате "бипа"
+
+if(digitalRead(BUTTON)==HIGH) // т.к. включен внутренний подтягивающий резистор, то LOW
+{
+  // Нажатие сработало
+  timer_stopped = false; // сменим флаг на противоположный, что бы запустить счетчик
+  beep(20);              // подтвердим нажатие звуком
+  delay(50);             // небольшая задержка, для сглаживания вероятного дребезга кнопки, вместе с бипом - более чем достаточно.
+}
+
+
+if (timer_stopped == false){       // Если таймер не остановлен, то запускаем цикл счетчика...
+  numerator(); // повысим цифру
+  // считаем
+  if (vTimer==30){
+    popravka = 20; // собственно поправка, что бы счетчик не "тормозил" 
+    beep(popravka);
+  }
+  //  - если отображаются последние 3 секунды таймера текущего и превышеного
+  else if ((vTimer<=59 && vTimer >= 57) || (vTimer<=89 && vTimer >= 87)){
+    popravka = 15; // собственно поправка, что бы счетчик не "тормозил" 
+    beep(popravka);
+  }
+  else { // нет звука - нет поправки
+    popravka = 0;
   }
 
+ // Условие на превышение таймера (60 секунд) и окончание (99 секунд). Звук другой, поправка все так же нужна, счетчик дальше тикает.
+   if (vTimer==60 || vTimer == 90) {
+     popravka = 40; // собственно опять поправка, что бы счетчик не "тормозил" 
+     beep(popravka);
+   }
+ 
+ // Дальше каждые 5 секунд слегка попискиваем, ибо нефиг
+   if ((vTimer>60 && vTimer<90) && (vTimer%60%5 == 0)){
+     popravka = 20; // собственно поправка, что бы счетчик не "тормозил" 
+     beep(popravka);
+   }
+ 
+ // Цикл с паузой, что бы секунды тикали нормально, с учетом поправки )))
+    for (int timer_pause=0;timer_pause<(100-popravka*2);timer_pause++){
+      if(button_is_down() == true) return;   // Проверим нажатость кнопки и при необходимости прерываем текущее выполнение функции loop, и все начинается с начала )))
+        delayMicroseconds(1200);   // Собственно сама микропауза, которая выполненная 1000 раз дает 1 секунду.
+    }
+
+  if(vTimer == 90)
+  {
+    timer_stopped = true; // Если все же таймер дошел до конца, меняем флаг на "останов" принудительно, что бы без нашего желания на второй круг счетчик не пошел.
+    resetNumber();
+  }
 }
 
-// этот метод отсылает бит на сдвиговый регистр
 
-void registerWrite(int whichPin, int whichState) {
-  // для хранения 16 битов используем unsigned int
-  unsigned int bitsToSend = 0;    
-
-  // выключаем светодиоды на время передачи битов
-  digitalWrite(latchPin, LOW);
-
-  // устанавливаем HIGH в соответствующий бит 
-  bitWrite(bitsToSend, whichPin, whichState);
-
-  // разбиваем наши 16 бит на два байта 
-  // для записи в первый и второй регистр
-  byte registerOne = highByte(bitsToSend);
-  byte registerTwo = lowByte(bitsToSend);
-
-  // "проталкиваем" байты в регистры
-  shiftOut(dataPin, clockPin, MSBFIRST, registerTwo);
-  shiftOut(dataPin, clockPin, MSBFIRST, registerOne);
-
-  // "защелкиваем" регистр, чтобы биты появились на выходах регистра
-  digitalWrite(latchPin, HIGH);
 }
